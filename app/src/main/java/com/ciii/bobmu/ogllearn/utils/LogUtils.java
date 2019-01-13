@@ -5,4 +5,5 @@ package com.ciii.bobmu.ogllearn.utils;
  */
 
 public class LogUtils {
+
 }
