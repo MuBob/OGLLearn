@@ -17,7 +17,7 @@ public class AirHockeyActivity extends AppCompatActivity {
         ActivityManager manager=(ActivityManager)getSystemService(ACTIVITY_SERVICE);
         if(manager.getDeviceConfigurationInfo().reqGlEsVersion>0x20000){
             surfaceView=new GLSurfaceView(this);
-            render=new AirHockeyRender();
+            render=new AirHockeyRender(this);
             surfaceView.setRenderer(render);
             setContentView(surfaceView);
         }else {
