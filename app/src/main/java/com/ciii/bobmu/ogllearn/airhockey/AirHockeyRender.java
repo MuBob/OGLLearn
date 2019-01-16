@@ -2,6 +2,7 @@ package com.ciii.bobmu.ogllearn.airhockey;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import android.widget.Toast;
 
 import com.ciii.bobmu.ogllearn.R;
 import com.ciii.bobmu.ogllearn.utils.LogUtil;
@@ -15,31 +16,18 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
-import static android.opengl.GLES20.GL_FLOAT;
-import static android.opengl.GLES20.GL_LINES;
-import static android.opengl.GLES20.GL_POINTS;
-import static android.opengl.GLES20.GL_TRIANGLES;
-import static android.opengl.GLES20.glClear;
-import static android.opengl.GLES20.glClearColor;
-import static android.opengl.GLES20.glDrawArrays;
-import static android.opengl.GLES20.glEnableVertexAttribArray;
-import static android.opengl.GLES20.glGetUniformLocation;
-import static android.opengl.GLES20.glUniform4f;
-import static android.opengl.GLES20.glUseProgram;
-import static android.opengl.GLES20.glVertexAttribPointer;
-import static android.opengl.GLES20.glViewport;
+import static android.opengl.GLES20.*;
 
 public class AirHockeyRender implements GLSurfaceView.Renderer {
 
-    private final static int POSITION_COMPONENT_COUNT=2;
-    private final static int BYTES_PER_FLOAT=4;
+    private final static int POSITION_COMPONENT_COUNT = 2;
+    private final static int BYTES_PER_FLOAT = 4;
     private Context context;
     private final FloatBuffer vertexData;
     private int program;
-    private static final String U_COLOR="u_Color";
+    private static final String U_COLOR = "u_Color";
     private int uColorLocation;
-    private static final String A_POSITION="a_Position";
+    private static final String A_POSITION = "a_Position";
     private int aPositionLocation;
 
     /**
@@ -53,7 +41,7 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
             -0.5f, -0.5f,
             0.5f, 0.5f,
             -0.5f, 0.5f,
-            //Triangle 2
+//            Triangle 2
 //            0f, 0f,
 //            9f, 0f,
 //            9f, 14f,
@@ -65,7 +53,7 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
 //            9f, 7f,
             -0.5f, 0f,
             0.5f, 0f,
-            //Mallets
+//            Mallets
 //            4.5f, 2f,
 //            4.5f, 12f
             0f, -0.25f,
@@ -73,9 +61,9 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
     };
 
     public AirHockeyRender(Context context) {
-        this.context=context;
-        vertexData= ByteBuffer
-                .allocateDirect(tableVertexWithTriangles.length*BYTES_PER_FLOAT)
+        this.context = context;
+        vertexData = ByteBuffer
+                .allocateDirect(tableVertexWithTriangles.length * BYTES_PER_FLOAT)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer();
         vertexData.put(tableVertexWithTriangles);
@@ -83,19 +71,24 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        String vertexShaderSource= TextResourceReader.readTextFromResource(context, R.raw.simple_vertex_shader);
-        String fragmentShaderSource= TextResourceReader.readTextFromResource(context, R.raw.simple_fragment_shader);
-        int vertexShader= ShaderHelper.compileVertexShader(vertexShaderSource);
-        int fragmentShader=ShaderHelper.compileFragmentShader(fragmentShaderSource);
-        program=ShaderHelper.linkProgram(vertexShader, fragmentShader);
-        if(!ShaderHelper.validateProgram(program)){
+        glClearColor(0f, 0f, 0f, 0f);
+        String vertexShaderSource = TextResourceReader.readTextFromResource(context, R.raw.simple_vertex_shader);
+        String fragmentShaderSource = TextResourceReader.readTextFromResource(context, R.raw.simple_fragment_shader);
+        int vertexShader = ShaderHelper.compileVertexShader(vertexShaderSource);
+        int fragmentShader = ShaderHelper.compileFragmentShader(fragmentShaderSource);
+        if(vertexShader==0||fragmentShader==0){
+            LogUtil.w("TAG", "AirHockeyRender.onSurfaceCreated: compile wrong!");
+            Toast.makeText(context, "编译失败，无法正常加载", Toast.LENGTH_SHORT);
+            return;
+        }
+        program = ShaderHelper.linkProgram(vertexShader, fragmentShader);
+        if (!ShaderHelper.validateProgram(program)) {
             LogUtil.w("TAG", "AirHockeyRender.onSurfaceCreated: program is wrong!");
             return;
         }
         glUseProgram(program);
-        uColorLocation=glGetUniformLocation(program, U_COLOR);  //获取uniform位置
-        aPositionLocation=glGetUniformLocation(program, A_POSITION);  //获取属性的uniform位置
+        uColorLocation = glGetUniformLocation(program, U_COLOR);  //获取uniform位置
+        aPositionLocation = glGetAttribLocation(program, A_POSITION);  //获取属性的uniform位置
         vertexData.position(0);  //禁止尝试读取缓冲区结尾后面的内容
         glVertexAttribPointer(
                 //属性位置
@@ -127,12 +120,12 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
         glDrawArrays(GL_TRIANGLES, 0, 6);  //从顶点数组的0位置开始读顶点，一共读入6个长度
 //        绘制分隔线
         glUniform4f(uColorLocation, 1.0f, 0.0f, 0.0f, 1.0f);
-        glDrawArrays(GL_LINES, 6,2);
+        glDrawArrays(GL_LINES, 6, 2);
 //        绘制两个木槌
         glUniform4f(uColorLocation, 0.0f, 0.0f, 1.0f, 1.0f);
-        glDrawArrays(GL_POINTS, 8,1);
+        glDrawArrays(GL_POINTS, 8, 1);
         glUniform4f(uColorLocation, 1.0f, 0.0f, 0.0f, 1.0f);
-        glDrawArrays(GL_POINTS, 9,1);
+        glDrawArrays(GL_POINTS, 9, 1);
 
     }
 }

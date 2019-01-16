@@ -17,12 +17,29 @@ public class AirHockeyActivity extends AppCompatActivity {
         ActivityManager manager=(ActivityManager)getSystemService(ACTIVITY_SERVICE);
         if(manager.getDeviceConfigurationInfo().reqGlEsVersion>0x20000){
             surfaceView=new GLSurfaceView(this);
+            surfaceView.setEGLContextClientVersion(2);  //设置版本号，解决glCreateShader() return 0;
             render=new AirHockeyRender(this);
             surfaceView.setRenderer(render);
             setContentView(surfaceView);
         }else {
             render=null;
             setContentView(R.layout.activity_air_hockey);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(render!=null){
+            surfaceView.onResume();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(render!=null){
+            surfaceView.onPause();
         }
     }
 }
