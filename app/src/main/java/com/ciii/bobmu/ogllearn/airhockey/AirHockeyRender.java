@@ -2,6 +2,7 @@ package com.ciii.bobmu.ogllearn.airhockey;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import android.opengl.Matrix;
 import android.widget.Toast;
 
 import com.ciii.bobmu.ogllearn.R;
@@ -58,22 +59,21 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
 //            Order of coordinates: X, Y, R, G, B, A
 //            Triangle Fan
             0f, 0f, 1f, 1f, 1f, 1f,
-            -0.5f, -0.5f, 0.7f, 0.7f, 0.7f, 1f,
-            0.5f, -0.5f, 0.7f, 0.7f, 0.7f, 1f,
-            0.5f, 0.5f, 0.7f, 0.7f, 0.7f, 1f,
-            -0.5f, 0.5f, 0.7f, 0.7f, 0.7f, 1f,
-            -0.5f, -0.5f, 0.7f, 0.7f, 0.7f, 1f,
+            -0.5f, -0.8f, 0.7f, 0.7f, 0.7f, 1f,
+            0.5f, -0.8f, 0.7f, 0.7f, 0.7f, 1f,
+            0.5f, 0.8f, 0.7f, 0.7f, 0.7f, 1f,
+            -0.5f, 0.8f, 0.7f, 0.7f, 0.7f, 1f,
+            -0.5f, -0.8f, 0.7f, 0.7f, 0.7f, 1f,
             //Line middle
 //            0f, 7f,
 //            9f, 7f,
             -0.5f, 0f, 0f, 1f, 0f, 1f,
-            0f, 0f, 0.9f, 1f, 0.9f, 1f,
             0.5f, 0f, 0f, 1f, 0f, 1f,
 //            Mallets
 //            4.5f, 2f,
 //            4.5f, 12f
-            0f, -0.25f, 0f, 0f, 1f, 1f,
-            0f, 0.25f, 1f, 0f, 0f, 1f
+            0f, -0.4f, 0f, 0f, 1f, 1f,
+            0f, 0.4f, 1f, 0f, 0f, 1f
     };
 
     public AirHockeyRender(Context context) {
@@ -133,11 +133,23 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
                 vertexData
         );
         glEnableVertexAttribArray(aColorLocation);
+
+        uMatrixLocation=glGetUniformLocation(program, U_MATRIX);
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         glViewport(0, 0, width, height);
+        final float aspectRatio=width>height?
+                (float)width/(float)height:
+                (float)height/(float)width;
+        if(width>height){
+            //Landscape
+            Matrix.orthoM(projectionMatrix, 0, -aspectRatio, aspectRatio, -1f, 1f, -1f, 1f);
+        }else{
+            //Portrait or square
+            Matrix.orthoM(projectionMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f);
+        }
     }
 
     @Override
@@ -149,12 +161,13 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
         glDrawArrays(GL_TRIANGLE_FAN, 0, 6);  //从顶点数组的0位置开始读顶点，一共读入6个长度
 //        绘制分隔线
 //        glUniform4f(uColorLocation, 1.0f, 0.0f, 0.0f, 1.0f);
-        glDrawArrays(GL_LINE_STRIP, 6, 3);
+        glDrawArrays(GL_LINE_STRIP, 6, 2);
 //        绘制两个木槌
 //        glUniform4f(uColorLocation, 0.0f, 0.0f, 1.0f, 1.0f);
-        glDrawArrays(GL_POINTS, 9, 1);
+        glDrawArrays(GL_POINTS, 8, 1);
 //        glUniform4f(uColorLocation, 1.0f, 0.0f, 0.0f, 1.0f);
-        glDrawArrays(GL_POINTS, 10, 1);
+        glDrawArrays(GL_POINTS, 9, 1);
 
+        glUniformMatrix4fv(uMatrixLocation, 1, false, projectionMatrix, 0);
     }
 }
