@@ -5,6 +5,7 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.widget.Toast;
 
+import com.ciii.bobmu.ogllearn.Constants;
 import com.ciii.bobmu.ogllearn.R;
 import com.ciii.bobmu.ogllearn.utils.LogUtil;
 import com.ciii.bobmu.ogllearn.utils.MatrixHelper;
@@ -39,7 +40,7 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
 //    private final static int POSITION_COMPONENT_COUNT = 4;
     private final static int POSITION_COMPONENT_COUNT = 2;
     private final static int COLOR_COMPONENT_COUNT = 4;
-    private final static int BYTES_PER_FLOAT = 4;
+    private final static int BYTES_PER_FLOAT = Constants.BYTES_PER_FLOAT;
     private final static int STRIDE = (POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT) * BYTES_PER_FLOAT;
     private Context context;
     private final FloatBuffer vertexData;
