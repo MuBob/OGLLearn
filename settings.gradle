@@ -1,1 +1,1 @@
-include ':app', ':app3d', ':appTextured'
+include ':app', ':app3d', ':appTextured', ':appWithMallets'
