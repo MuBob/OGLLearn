@@ -1,10 +1,11 @@
 package com.ciii.bobmu.ogllearn.programs;
 
 import android.content.Context;
-import android.opengl.GLES20;
 
 import com.ciii.bobmu.ogllearn.utils.ShaderHelper;
 import com.ciii.bobmu.ogllearn.utils.TextResourceReader;
+
+import static android.opengl.GLES20.glUseProgram;
 
 /**
  * Created by bob on 2019/3/30.
@@ -28,6 +29,6 @@ public class ShaderProgram {
     }
 
     public void useProgram(){
-        GLES20.glUseProgram(program);
+        glUseProgram(program);
     }
 }

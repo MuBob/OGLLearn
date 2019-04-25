@@ -1,18 +1,21 @@
 package com.ciii.bobmu.ogllearn.objects;
 
-import android.opengl.GLES20;
-
+import com.ciii.bobmu.ogllearn.Constants;
 import com.ciii.bobmu.ogllearn.data.VertexArray;
-import com.ciii.bobmu.ogllearn.utils.TextureHelper;
+import com.ciii.bobmu.ogllearn.programs.TextureShaderProgram;
 
-import static com.ciii.bobmu.ogllearn.objects.Mallet.POSITION_COMPONENT_COUNT;
-import static com.ciii.bobmu.ogllearn.objects.Mallet.STRIDE;
+import static android.opengl.GLES20.GL_TRIANGLE_FAN;
+import static android.opengl.GLES20.glDrawArrays;
 
 /**
  * Created by bob on 2019/3/30.
  */
 
 public class Table {
+    private static final int POSITION_COMPONENT_COUNT=2;
+    private static final int TEXTURE_COORDINATES_COMPONENT_COUNT=2;
+    private static final int STRIDE=(POSITION_COMPONENT_COUNT+TEXTURE_COORDINATES_COMPONENT_COUNT)* Constants.BYTES_PER_FLOAT;
+
     private static final float[] VERTEX_DATA={
             // Order of coordinates: X, Y, S, T
             //Triangle Fan
@@ -42,7 +45,7 @@ public class Table {
     }
 
     public void draw(){
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, 0);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
     }
 
 

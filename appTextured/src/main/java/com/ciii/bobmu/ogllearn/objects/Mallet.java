@@ -1,9 +1,11 @@
 package com.ciii.bobmu.ogllearn.objects;
 
-import android.opengl.GLES20;
-
 import com.ciii.bobmu.ogllearn.Constants;
 import com.ciii.bobmu.ogllearn.data.VertexArray;
+import com.ciii.bobmu.ogllearn.programs.ColorShaderProgram;
+
+import static android.opengl.GLES20.GL_POINTS;
+import static android.opengl.GLES20.glDrawArrays;
 
 /**
  * Created by bob on 2019/3/30.
@@ -39,6 +41,6 @@ public class Mallet {
     }
 
     public void draw(){
-        GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 2);
+        glDrawArrays(GL_POINTS, 0, 2);
     }
 }

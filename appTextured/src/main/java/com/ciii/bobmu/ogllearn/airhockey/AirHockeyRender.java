@@ -3,42 +3,27 @@ package com.ciii.bobmu.ogllearn.airhockey;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import android.widget.Toast;
 
-import com.ciii.bobmu.ogllearn.Constants;
 import com.ciii.bobmu.ogllearn.R;
-import com.ciii.bobmu.ogllearn.utils.LogUtil;
+import com.ciii.bobmu.ogllearn.objects.Mallet;
+import com.ciii.bobmu.ogllearn.objects.Table;
+import com.ciii.bobmu.ogllearn.programs.ColorShaderProgram;
+import com.ciii.bobmu.ogllearn.programs.TextureShaderProgram;
 import com.ciii.bobmu.ogllearn.utils.MatrixHelper;
-import com.ciii.bobmu.ogllearn.utils.ShaderHelper;
-import com.ciii.bobmu.ogllearn.utils.TextResourceReader;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
+import com.ciii.bobmu.ogllearn.utils.TextureHelper;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
-import static android.opengl.GLES20.GL_FLOAT;
-import static android.opengl.GLES20.GL_LINE_STRIP;
-import static android.opengl.GLES20.GL_POINTS;
-import static android.opengl.GLES20.GL_TRIANGLE_FAN;
 import static android.opengl.GLES20.glClear;
 import static android.opengl.GLES20.glClearColor;
-import static android.opengl.GLES20.glDrawArrays;
-import static android.opengl.GLES20.glEnableVertexAttribArray;
-import static android.opengl.GLES20.glGetAttribLocation;
-import static android.opengl.GLES20.glGetUniformLocation;
-import static android.opengl.GLES20.glUniformMatrix4fv;
-import static android.opengl.GLES20.glUseProgram;
-import static android.opengl.GLES20.glVertexAttribPointer;
 import static android.opengl.GLES20.glViewport;
 
 public class AirHockeyRender implements GLSurfaceView.Renderer {
 
 //    private final static int POSITION_COMPONENT_COUNT = 4;
-    private final static int POSITION_COMPONENT_COUNT = 2;
+/*    private final static int POSITION_COMPONENT_COUNT = 2;
     private final static int COLOR_COMPONENT_COUNT = 4;
     private final static int BYTES_PER_FLOAT = Constants.BYTES_PER_FLOAT;
     private final static int STRIDE = (POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT) * BYTES_PER_FLOAT;
@@ -52,9 +37,16 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
     private static final String A_COLOR = "a_Color";
     private int aColorLocation;
     private static final String U_MATRIX="u_Matrix";
-    private int uMatrixLocation;
+    private int uMatrixLocation;*/
+
     private final float[] projectionMatrix=new float[16];  //顶点数组转换为矩阵存储
     private final float[] modelMatrix=new float[16];
+    private Context context;
+    private Table table;
+    private Mallet mallet;
+    private TextureShaderProgram textureProgram;
+    private ColorShaderProgram colorProgram;
+    private int texture;
 
     /**
      * 使用winding order两个三角形表示桌子的四个顶点
@@ -112,17 +104,25 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
     };
     */
     public AirHockeyRender(Context context) {
-        this.context = context;
+        this.context=context;
+        /*this.context = context;
         vertexData = ByteBuffer
                 .allocateDirect(tableVertexWithTriangles.length * BYTES_PER_FLOAT)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer();
-        vertexData.put(tableVertexWithTriangles);
+        vertexData.put(tableVertexWithTriangles);*/
     }
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        glClearColor(0f, 0f, 0f, 0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        table=new Table();
+        mallet=new Mallet();
+        textureProgram=new TextureShaderProgram(context);
+        colorProgram=new ColorShaderProgram(context);
+        texture= TextureHelper.loadTexture(context, R.mipmap.bg);
+
+       /* glClearColor(0f, 0f, 0f, 0f);
         String vertexShaderSource = TextResourceReader.readTextFromResource(context, R.raw.simple_vertex_shader);
         String fragmentShaderSource = TextResourceReader.readTextFromResource(context, R.raw.simple_fragment_shader);
         int vertexShader = ShaderHelper.compileVertexShader(vertexShaderSource);
@@ -170,12 +170,12 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
         glEnableVertexAttribArray(aColorLocation);
 
         uMatrixLocation=glGetUniformLocation(program, U_MATRIX);
-    }
+  */  }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         glViewport(0, 0, width, height);
-        /*
+
         final float aspectRatio=width>height?
                 (float)width/(float)height:
                 (float)height/(float)width;
@@ -186,7 +186,7 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
             //Portrait or square
             Matrix.orthoM(projectionMatrix, 0, -1f, 1f, -aspectRatio, aspectRatio, -1f, 1f);
         }
-        */
+
         MatrixHelper.perspectiveM(projectionMatrix, 45, (float)width/(float)height, 1f, 10f);
         Matrix.setIdentityM(modelMatrix, 0);
         Matrix.translateM(modelMatrix, 0, 0f, 0f, -2.5f);
@@ -194,12 +194,23 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
         final  float[] temp=new float[16];
         Matrix.multiplyMM(temp, 0, projectionMatrix, 0, modelMatrix, 0);
         System.arraycopy(temp, 0, projectionMatrix, 0, temp.length);
-
-
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        textureProgram.useProgram();
+        textureProgram.setUniforms(projectionMatrix, texture);
+        table.bindData(textureProgram);
+        table.draw();
+
+        colorProgram.useProgram();
+        colorProgram.setUniforms(projectionMatrix);
+        mallet.bindData(colorProgram);
+        mallet.draw();
+
+        /*
         glClear(GL_COLOR_BUFFER_BIT);
 //        绘制三角形桌子
 //        glUniform4f(uColorLocation, 1.0f, 1.0f, 1.0f, 1.0f);  //更新着色器代码中的颜色值
@@ -215,5 +226,6 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
         glDrawArrays(GL_POINTS, 9, 1);
 
         glUniformMatrix4fv(uMatrixLocation, 1, false, projectionMatrix, 0);
+        */
     }
 }
