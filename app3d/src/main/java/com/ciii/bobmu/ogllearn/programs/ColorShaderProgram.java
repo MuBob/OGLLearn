@@ -1,15 +1,15 @@
 package com.ciii.bobmu.ogllearn.programs;
 
 import android.content.Context;
-import android.opengl.GLES20;
 
 import com.ciii.bobmu.ogllearn.R;
-/**
- * 颜色加载程序
- * Created by BobMu on 2019/4/25.
- */
-public class ColorShaderProgram extends ShaderProgram {
 
+import static android.opengl.GLES20.glGetAttribLocation;
+import static android.opengl.GLES20.glGetUniformLocation;
+import static android.opengl.GLES20.glUniformMatrix4fv;
+
+
+public class ColorShaderProgram extends ShaderProgram {
     //Uniform locations
     private final  int uMatrixLocation;
 
@@ -19,13 +19,12 @@ public class ColorShaderProgram extends ShaderProgram {
 
     public ColorShaderProgram(Context context) {
         super(context, R.raw.simple_vertex_shader, R.raw.simple_fragment_shader);
-        uMatrixLocation= GLES20.glGetUniformLocation(program, U_MATRIX);
-        aPositionLocation=GLES20.glGetAttribLocation(program, A_POSITION);
-        aColorLocation=GLES20.glGetAttribLocation(program, A_COLOR);
+        uMatrixLocation= glGetUniformLocation(program, U_MATRIX);
+        aPositionLocation=glGetAttribLocation(program, A_POSITION);
+        aColorLocation=glGetAttribLocation(program, A_COLOR);
     }
-
     public void setUniforms(float[] matrix){
-        GLES20.glUniformMatrix4fv(uMatrixLocation, 1, false, matrix, 0);
+        glUniformMatrix4fv(uMatrixLocation, 1, false, matrix, 0);
     }
 
     public int getPositionAttributeLocation(){
@@ -35,5 +34,4 @@ public class ColorShaderProgram extends ShaderProgram {
     public int getColorAttributeLocation(){
         return aColorLocation;
     }
-
 }

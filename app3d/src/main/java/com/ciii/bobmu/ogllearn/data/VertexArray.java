@@ -8,18 +8,16 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+import static android.opengl.GLES20.glEnableVertexAttribArray;
+import static android.opengl.GLES20.glVertexAttribPointer;
 
-/**
- * 存储顶点矩阵数据
- * Created by bob on 2019/3/30.
- */
 
 public class VertexArray {
-    private static final int BYTES_PER_FLOAT = Constants.BYTES_PER_FLOAT;
-    private final FloatBuffer floatBuffer;
-    public VertexArray(float[] vertexData){
+    private FloatBuffer floatBuffer;
+
+    public VertexArray(float[] vertexData) {
         floatBuffer= ByteBuffer
-                .allocateDirect(vertexData.length*BYTES_PER_FLOAT)
+                .allocateDirect(vertexData.length* Constants.BYTES_PER_FLOAT)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
                 .put(vertexData);
@@ -27,11 +25,8 @@ public class VertexArray {
 
     public void setVertexAttribPointer(int dataOffset, int attributeLocation, int componentCount, int stride){
         floatBuffer.position(dataOffset);
-        GLES20.glVertexAttribPointer(attributeLocation, componentCount, GLES20.GL_FLOAT, false, stride, floatBuffer);
-        GLES20.glEnableVertexAttribArray(attributeLocation);
+        glVertexAttribPointer(attributeLocation, componentCount,  GLES20.GL_FLOAT, false, stride, floatBuffer);  //绘制顶点数组
+        glEnableVertexAttribArray(attributeLocation);  //允许使用顶点数组
         floatBuffer.position(0);
     }
-
-
-
 }

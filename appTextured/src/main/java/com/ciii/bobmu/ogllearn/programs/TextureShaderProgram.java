@@ -6,6 +6,7 @@ import android.opengl.GLES20;
 import com.ciii.bobmu.ogllearn.R;
 
 /**
+ * 纹理加载程序
  * Created by bob on 2019/3/30.
  */
 

@@ -1,4 +1,4 @@
-package com.ciii.bobmu.ogllearn.airhockey;
+package com.ciii.bobmu.ogllearn.airhockey_texture;
 
 import android.app.ActivityManager;
 import android.opengl.GLSurfaceView;

@@ -1,16 +1,12 @@
 package com.ciii.bobmu.ogllearn.programs;
 
 import android.content.Context;
+import android.support.annotation.RawRes;
 
 import com.ciii.bobmu.ogllearn.utils.ShaderHelper;
 import com.ciii.bobmu.ogllearn.utils.TextResourceReader;
 
 import static android.opengl.GLES20.glUseProgram;
-
-/**
- * 绘制纹理程序基类
- * Created by bob on 2019/3/30.
- */
 
 public class ShaderProgram {
     //Uniform constants
@@ -21,8 +17,9 @@ public class ShaderProgram {
     protected static final String A_COLOR="a_Color";
     protected static final String A_TEXTURE_COORDINATES="a_TextureCoordinates";
     //Shader program
-    protected final int program;
-    protected ShaderProgram(Context context, int vertexShaderResourceId, int fragmentShaderResourceId){
+    protected int program;
+
+    protected ShaderProgram(Context context, @RawRes int vertexShaderResourceId,  @RawRes int fragmentShaderResourceId){
         program= ShaderHelper.buildProgram(
                 TextResourceReader.readTextFromResource(context, vertexShaderResourceId),
                 TextResourceReader.readTextFromResource(context, fragmentShaderResourceId)
@@ -32,4 +29,5 @@ public class ShaderProgram {
     public void useProgram(){
         glUseProgram(program);
     }
+
 }

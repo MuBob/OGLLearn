@@ -1,4 +1,4 @@
-package com.ciii.bobmu.ogllearn.airhockey;
+package com.ciii.bobmu.ogllearn.airhockey_second;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
@@ -34,7 +34,7 @@ import static android.opengl.GLES20.glUseProgram;
 import static android.opengl.GLES20.glVertexAttribPointer;
 import static android.opengl.GLES20.glViewport;
 
-public class AirHockeyRender implements GLSurfaceView.Renderer {
+class AirHockeyRender implements GLSurfaceView.Renderer {
 
 //    private final static int POSITION_COMPONENT_COUNT = 4;
     private final static int POSITION_COMPONENT_COUNT = 2;

@@ -19,7 +19,9 @@
         </activity>
         <activity android:name=".FirstActivity">
         </activity>
-        <activity android:name=".airhockey.AirHockeyActivity">
+        <activity android:name=".airhockey_second.AirHockeyActivity">
+        </activity>
+        <activity android:name=".airhockey_texture.AirHockeyActivity">
         </activity>
     </application>
 
