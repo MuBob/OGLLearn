@@ -8,17 +8,17 @@ import static android.opengl.GLES20.GL_POINTS;
 import static android.opengl.GLES20.glDrawArrays;
 
 /**
+ * 木槌绘制类
  * Created by bob on 2019/3/30.
  */
-
 public class Mallet {
     static final int POSITION_COMPONENT_COUNT=2;
     static final int COLOR_COMPONENT_COUNT=3;
-    static final int STRIDE=(POSITION_COMPONENT_COUNT+COLOR_COMPONENT_COUNT)* Constants.BYTES_PER_FLOAT;
+    static final int STRIDE = (POSITION_COMPONENT_COUNT+COLOR_COMPONENT_COUNT)* Constants.BYTES_PER_FLOAT;
     private static final float[] VERTEX_DATA={
             //Order of coordinates: X, Y, R, G, B
-            0f, -0.4f, 0f, 0f, 1f,
-            0f,  0.4f, 1f, 0f, 0f
+            0f, -0.4f, 1f, 0f, 0f,
+            0f,  0.4f, 0f, 0f, 1f
     };
     private final VertexArray vertexArray;
     public Mallet(){
