@@ -1,12 +1,14 @@
 package com.ciii.bobmu.ogllearn.data;
 
-import android.opengl.GLES20;
-
 import com.ciii.bobmu.ogllearn.Constants;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+
+import static android.opengl.GLES20.GL_FLOAT;
+import static android.opengl.GLES20.glEnableVertexAttribArray;
+import static android.opengl.GLES20.glVertexAttribPointer;
 
 
 /**
@@ -27,8 +29,8 @@ public class VertexArray {
 
     public void setVertexAttribPointer(int dataOffset, int attributeLocation, int componentCount, int stride){
         floatBuffer.position(dataOffset);
-        GLES20.glVertexAttribPointer(attributeLocation, componentCount, GLES20.GL_FLOAT, false, stride, floatBuffer);
-        GLES20.glEnableVertexAttribArray(attributeLocation);
+        glVertexAttribPointer(attributeLocation, componentCount, GL_FLOAT, false, stride, floatBuffer);
+        glEnableVertexAttribArray(attributeLocation);
         floatBuffer.position(0);
     }
 

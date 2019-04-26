@@ -5,20 +5,22 @@ import com.ciii.bobmu.ogllearn.programs.ColorShaderProgram;
 import com.ciii.bobmu.ogllearn.utils.Geometry;
 
 import java.util.List;
-
 /**
- * 木槌绘制类
- * Created by bob on 2019/3/30.
+ * 绘制冰球类
+ * Created by BobMu on 2019/4/26.
  */
-public class Mallet {
+public class Puck {
     private static final int POSITION_COMPONENT_COUNT=3;
     public final float radius, height;
+
     private final VertexArray vertexArray;
     private final List<ObjectBuilder.DrawCommand> drawList;
 
-    public Mallet(float radius, float height, int numPointsAroundMallet) {
-        ObjectBuilder.GeneratedData generatedData=ObjectBuilder.createMallet(
-                new Geometry.Point(0f, 0f, 0f), radius, height, numPointsAroundMallet
+    public Puck(float radius, float height, int numPointsAroundPuck) {
+        ObjectBuilder.GeneratedData generatedData= ObjectBuilder.createPuck(
+                new Geometry.Cylinder(
+                        new Geometry.Point(0f, 0f, 0f), radius, height
+                ), numPointsAroundPuck
         );
         this.radius = radius;
         this.height = height;
@@ -26,7 +28,7 @@ public class Mallet {
         drawList=generatedData.drawList;
     }
 
-    public void bindData(ColorShaderProgram colorProgram){
+    public void  bindData(ColorShaderProgram colorProgram){
         vertexArray.setVertexAttribPointer(
                 0,
                 colorProgram.getPositionAttributeLocation(),
@@ -34,7 +36,6 @@ public class Mallet {
                 0
         );
     }
-
 
     public void draw(){
         for (ObjectBuilder.DrawCommand drawCommand:drawList){

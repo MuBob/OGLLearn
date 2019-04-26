@@ -1,6 +1,6 @@
 package com.ciii.bobmu.ogllearn.objects;
 
-import com.ciii.bobmu.ogllearn.sf.Geometry;
+import com.ciii.bobmu.ogllearn.utils.Geometry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,20 +24,26 @@ public class ObjectBuilder {
     }
 
     private static int sizeOfOpenCylinderInVertices(int numPoints){
-        return 1+(numPoints+1);
+        return 2*(numPoints+1);
     }
 
-    private void appendCircle(Geometry.Circle circle, final int numPoints){
+    private void appendCircle(Geometry.Circle circle, int numPoints){
         final int startVertex=offset/FLOATS_PER_VERTEX;
         final int numVertices=sizeOfCircleInVertices(numPoints);
         vertexData[offset++]=circle.center.x;
         vertexData[offset++]=circle.center.y;
         vertexData[offset++]=circle.center.z;
         for (int i = 0; i <= numPoints; i++) {
-            float angleInRadians=((float)i/(float)numPoints)*((float) Math.PI*2f);
-            vertexData[offset++]=circle.center.x+circle.radius* (float)Math.cos(angleInRadians);
+            float angleInRadians=
+                    ((float)i/(float)numPoints)
+                            *((float) Math.PI*2f);
+            vertexData[offset++]=
+                    circle.center.x
+                            +circle.radius* (float)Math.cos(angleInRadians);
             vertexData[offset++]=circle.center.y;
-            vertexData[offset++]=circle.center.z+circle.radius*(float)Math.sin(angleInRadians);
+            vertexData[offset++]=
+                    circle.center.z
+                            +circle.radius*(float)Math.sin(angleInRadians);
         }
         drawList.add(new DrawCommand() {
             @Override
@@ -47,18 +53,26 @@ public class ObjectBuilder {
         });
     }
 
-    private void appendOpenCylinder(Geometry.Cylinder cylinder, final int numPoints){
+    private void appendOpenCylinder(Geometry.Cylinder cylinder, int numPoints){
         final int startVertex=offset/FLOATS_PER_VERTEX;
         final int numVertices=sizeOfOpenCylinderInVertices(numPoints);
         final float yStart=cylinder.center.y-(cylinder.height/2f);
         final float yEnd=cylinder.center.y+(cylinder.height/2f);
         for (int i = 0; i <= numPoints; i++) {
-            float angleInRadians=((float) i/(float)numPoints)*((float) Math.PI*2f);
-            float xPosition=cylinder.center.x+cylinder.radius*(float) Math.cos(angleInRadians);
-            float zPosition=cylinder.center.z+cylinder.radius*(float)Math.sin(angleInRadians);
+            float angleInRadians=
+                    ((float) i/(float)numPoints)
+                            *((float) Math.PI*2f);
+            float xPosition=
+                    cylinder.center.x
+                            +cylinder.radius*(float) Math.cos(angleInRadians);
+            float zPosition=
+                    cylinder.center.z
+                            +cylinder.radius*(float)Math.sin(angleInRadians);
+
             vertexData[offset++]=xPosition;
             vertexData[offset++]=yStart;
             vertexData[offset++]=zPosition;
+
             vertexData[offset++]=xPosition;
             vertexData[offset++]=yEnd;
             vertexData[offset++]=zPosition;
@@ -76,16 +90,21 @@ public class ObjectBuilder {
     }
 
     public static GeneratedData createPuck(Geometry.Cylinder puck, int numPoints){
-        int size=sizeOfCircleInVertices(numPoints)+sizeOfOpenCylinderInVertices(numPoints);
+        int size=
+                sizeOfCircleInVertices(numPoints)
+                        +sizeOfOpenCylinderInVertices(numPoints);
         ObjectBuilder builder=new ObjectBuilder(size);
-        Geometry.Circle puckTop=new Geometry.Circle(puck.center.translateY(puck.height/2f), puck.radius);
+        Geometry.Circle puckTop=new Geometry.Circle(
+                puck.center.translateY(puck.height/2f),
+                puck.radius);
         builder.appendCircle(puckTop, numPoints);
         builder.appendOpenCylinder(puck, numPoints);
         return builder.build();
     }
 
     public static GeneratedData createMallet(Geometry.Point center, float radius, float height, int numPoints){
-        int size=sizeOfCircleInVertices(numPoints)*2+sizeOfOpenCylinderInVertices(numPoints)*2;
+        int size=sizeOfCircleInVertices(numPoints)*2
+                +sizeOfOpenCylinderInVertices(numPoints)*2;
         ObjectBuilder builder=new ObjectBuilder(size);
         float baseHeight=height*0.25f;
         Geometry.Circle baseCircle=new Geometry.Circle(
@@ -96,6 +115,7 @@ public class ObjectBuilder {
                 radius, baseHeight);
         builder.appendCircle(baseCircle, numPoints);
         builder.appendOpenCylinder(baseCylinder, numPoints);
+
         float handleHeight=height*0.75f;
         float handleRadius=radius/3f;
         Geometry.Circle handleCircle=new Geometry.Circle(
