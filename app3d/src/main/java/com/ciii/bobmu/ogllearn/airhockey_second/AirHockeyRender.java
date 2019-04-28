@@ -122,8 +122,8 @@ class AirHockeyRender implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         glClearColor(0f, 0f, 0f, 0f);
-        String vertexShaderSource = TextResourceReader.readTextFromResource(context, R.raw.simple_vertex_shader);
-        String fragmentShaderSource = TextResourceReader.readTextFromResource(context, R.raw.simple_fragment_shader);
+        String vertexShaderSource = TextResourceReader.readTextFromResource(context, R.raw.simple_simple_vertex_shader);
+        String fragmentShaderSource = TextResourceReader.readTextFromResource(context, R.raw.simple_simple_fragment_shader);
         int vertexShader = ShaderHelper.compileVertexShader(vertexShaderSource);
         int fragmentShader = ShaderHelper.compileFragmentShader(fragmentShaderSource);
         if (vertexShader == 0 || fragmentShader == 0) {

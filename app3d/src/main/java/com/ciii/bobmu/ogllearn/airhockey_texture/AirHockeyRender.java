@@ -5,9 +5,9 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 
 import com.ciii.bobmu.ogllearn.R;
-import com.ciii.bobmu.ogllearn.objects.Mallet;
+import com.ciii.bobmu.ogllearn.objects.SimpleMallet;
 import com.ciii.bobmu.ogllearn.objects.Table;
-import com.ciii.bobmu.ogllearn.programs.ColorShaderProgram;
+import com.ciii.bobmu.ogllearn.programs.ColorSimpleShaderProgram;
 import com.ciii.bobmu.ogllearn.programs.TextureShaderProgram;
 import com.ciii.bobmu.ogllearn.utils.MatrixHelper;
 import com.ciii.bobmu.ogllearn.utils.TextureHelper;
@@ -26,9 +26,9 @@ class AirHockeyRender implements GLSurfaceView.Renderer {
     private final float[] modelMatrix=new float[16];
     private Context context;
     private Table table;
-    private Mallet mallet;
+    private SimpleMallet mallet;
     private TextureShaderProgram textureProgram;
-    private ColorShaderProgram colorProgram;
+    private ColorSimpleShaderProgram colorProgram;
     private int textureId;
 
     public AirHockeyRender(Context context) {
@@ -39,9 +39,9 @@ class AirHockeyRender implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         table=new Table();
-        mallet=new Mallet();
+        mallet=new SimpleMallet();
         textureProgram=new TextureShaderProgram(context);
-        colorProgram=new ColorShaderProgram(context);
+        colorProgram=new ColorSimpleShaderProgram(context);
         textureId= TextureHelper.loadTexture(context, R.mipmap.bg);
     }
 

@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(secondIntent, 103)
         }
         button_fourth.setOnClickListener{
-            var secondIntent=Intent(this, com.ciii.bobmu.ogllearn.airhockey_texture.AirHockeyActivity::class.java)
+            var secondIntent=Intent(this, com.ciii.bobmu.ogllearn.airhockey_mallet.AirHockeyActivity::class.java)
             startActivityForResult(secondIntent, 104)
         }
     }
