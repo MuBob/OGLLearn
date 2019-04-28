@@ -106,7 +106,8 @@ public class ObjectBuilder {
         int size=sizeOfCircleInVertices(numPoints)*2
                 +sizeOfOpenCylinderInVertices(numPoints)*2;
         ObjectBuilder builder=new ObjectBuilder(size);
-        float baseHeight=height*0.25f;
+        //基部扁平圆柱体
+        float baseHeight=height*0.20f;
         Geometry.Circle baseCircle=new Geometry.Circle(
                 center.translateY(-baseHeight)
                 , radius);
@@ -115,8 +116,8 @@ public class ObjectBuilder {
                 radius, baseHeight);
         builder.appendCircle(baseCircle, numPoints);
         builder.appendOpenCylinder(baseCylinder, numPoints);
-
-        float handleHeight=height*0.75f;
+        //把手瘦长圆柱体
+        float handleHeight=height*0.70f;
         float handleRadius=radius/3f;
         Geometry.Circle handleCircle=new Geometry.Circle(
                 center.translateY(height*0.5f),
@@ -128,6 +129,7 @@ public class ObjectBuilder {
         );
         builder.appendCircle(handleCircle, numPoints);
         builder.appendOpenCylinder(handleCylinder, numPoints);
+
         return builder.build();
     }
 

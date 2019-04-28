@@ -29,14 +29,12 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
     private final float[] viewProjectionMatrix=new float[16];
     private final float[] modelViewProjectionMatrix=new float[16];
     private Context context;
-    private Table table;
-    private Mallet mallet;
-    private Puck puck;
-    private TextureShaderProgram textureProgram;
-    private ColorShaderProgram colorProgram;
+    private Table table;  //桌子
+    private Mallet mallet;  //木槌
+    private Puck puck;  //冰球
+    private TextureShaderProgram textureProgram;  //纹理加载程序
+    private ColorShaderProgram colorProgram;  //着色加载程序
     private int texture;
-
-
 
     public AirHockeyRender(Context context) {
         this.context=context;
@@ -84,17 +82,17 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
 
         positionObjectInScene(0f, mallet.height/2f, -0.4f);
         colorProgram.useProgram();
-        colorProgram.setUniforms(modelViewProjectionMatrix, 1f, 0f, 0f);
+        colorProgram.setUniforms(modelViewProjectionMatrix, 0f, 1f, 0f);  //黄色
         mallet.bindData(colorProgram);
         mallet.draw();
 
         positionObjectInScene(0f, mallet.height/2f, 0.4f);
-        colorProgram.setUniforms(modelViewProjectionMatrix, 0f, 0f, 1f);
+        colorProgram.setUniforms(modelViewProjectionMatrix, 1f, 0f, 0f);
         //这里不需要再次定义数据，只需要原数据更新位置后绘制即可
         mallet.draw();
 
         positionObjectInScene(0f, puck.height/2f, 0f);
-        colorProgram.setUniforms(modelViewProjectionMatrix, 0.8f, 0.8f, 1f);
+        colorProgram.setUniforms(modelViewProjectionMatrix, 0.8f, 0.8f, 1f);  //紫色
         puck.bindData(colorProgram);
         puck.draw();
 
