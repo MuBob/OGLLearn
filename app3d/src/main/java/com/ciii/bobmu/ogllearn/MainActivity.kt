@@ -11,20 +11,24 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         button_first.setOnClickListener {
-            var firstIntent=Intent(this, FirstActivity::class.java)
-            startActivityForResult(firstIntent, 101)
+            var intent=Intent(this, FirstActivity::class.java)
+            startActivityForResult(intent, 101)
         }
         button_second.setOnClickListener {
-            var secondIntent=Intent(this, com.ciii.bobmu.ogllearn.airhockey_second.AirHockeyActivity::class.java)
-            startActivityForResult(secondIntent, 102)
+            var intent=Intent(this, com.ciii.bobmu.ogllearn.airhockey_second.AirHockeyActivity::class.java)
+            startActivityForResult(intent, 102)
         }
         button_third.setOnClickListener{
-            var secondIntent=Intent(this, com.ciii.bobmu.ogllearn.airhockey_texture.AirHockeyActivity::class.java)
-            startActivityForResult(secondIntent, 103)
+            var intent=Intent(this, com.ciii.bobmu.ogllearn.airhockey_texture.AirHockeyActivity::class.java)
+            startActivityForResult(intent, 103)
         }
         button_fourth.setOnClickListener{
-            var secondIntent=Intent(this, com.ciii.bobmu.ogllearn.airhockey_mallet.AirHockeyActivity::class.java)
-            startActivityForResult(secondIntent, 104)
+            var intent=Intent(this, com.ciii.bobmu.ogllearn.airhockey_mallet.AirHockeyActivity::class.java)
+            startActivityForResult(intent, 104)
+        }
+        button_fifth.setOnClickListener{
+            var intent=Intent(this, com.ciii.bobmu.ogllearn.airhockey_mallet.AirHockeyActivity::class.java)
+            startActivityForResult(intent, 105)
         }
     }
 

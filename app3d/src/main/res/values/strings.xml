@@ -4,4 +4,5 @@
     <string name="str_second_part">第二部分</string>
     <string name="str_third_part">第三部分：绘制纹理</string>
     <string name="str_fourth_part">第四部分：优化物体</string>
+    <string name="str_fifth_part">第五部分：增加触控</string>
 </resources>
