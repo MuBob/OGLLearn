@@ -30,5 +30,17 @@ public class MatrixHelper {
         m[15] = 0f;
     }
 
+    public static String printM(float[] m){
+        StringBuffer sb=new StringBuffer("{");
+        for (int i = 0; i < m.length; i++) {
+            sb.append(m[i]);
+            sb.append(", ");
+        }
+        sb.delete(sb.length()-2, sb.length());
+        sb.append("}[");
+        sb.append(m.length);
+        sb.append("]");
+        return sb.toString();
+    }
 
 }

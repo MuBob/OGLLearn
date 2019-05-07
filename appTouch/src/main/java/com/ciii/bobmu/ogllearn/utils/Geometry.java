@@ -10,6 +10,7 @@ public class Geometry {
             this.z = z;
         }
 
+            // Y轴平移
         public Point translateY(float distance) {
             return new Point(x, y + distance, z);
         }
@@ -18,7 +19,7 @@ public class Geometry {
             return new Point(
                     x + vector.x,
                     y + vector.y,
-                    y + vector.z
+                    z + vector.z
             );
         }
 
@@ -41,6 +42,7 @@ public class Geometry {
             this.radius = radius;
         }
 
+            // 缩放半径
         public Circle scale(float scale) {
             return new Circle(center, radius * scale);
         }
@@ -215,12 +217,25 @@ public class Geometry {
      * @return 交点
      */
     public static Point intersectionPoint(Ray ray, Plane plane) {
+        // 产生 射线起点 到 平面视点的向量
         Vector rayToPlaneVector = vectorBetween(ray.point, plane.point);
-        float scaleFactor = rayToPlaneVector.dotProduct(plane.normal) / ray.vector.dotProduct(plane.normal);
+        LogUtil.i("TouchTestTAG", "Geometry.intersectionPoint: rayToPlaneVector="+rayToPlaneVector);
+        // 射线起点到平面的向量 与 法向量的点积 / 射线向量 与 法向量的点积 = 缩放因子
+        float scaleFactor = rayToPlaneVector.dotProduct(plane.normal)
+		 / ray.vector.dotProduct(plane.normal);
+        LogUtil.i("TouchTestTAG", "Geometry.intersectionPoint: scaleFactor="+scaleFactor);
+        //根据缩放因子，缩放射线向量，再从射线起点开始 沿着 缩放后的射线向量，得出与平面的交点
         Point intersectionPoint = ray.point.translate(ray.vector.scale(scaleFactor));
+        LogUtil.i("TouchTestTAG", "Geometry.intersectionPoint: intersectionPoint="+intersectionPoint);
         return intersectionPoint;
     }
 
+    /**
+     * 点到射线的距离
+     * @param point
+     * @param ray
+     * @return
+     */
     private static float distanceBetween(Point point, Ray ray) {
         Vector p1ToPoint = vectorBetween(ray.point, point);
         Vector p2ToPoint = vectorBetween(ray.point.translate(ray.vector), point);

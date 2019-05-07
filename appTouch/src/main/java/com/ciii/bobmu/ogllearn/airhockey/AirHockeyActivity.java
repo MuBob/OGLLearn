@@ -63,10 +63,11 @@ public class AirHockeyActivity extends AppCompatActivity
         if (event != null) {
             final float normalizedX = (event.getX() / (float) v.getWidth()) * 2 - 1;
             final float normalizedY=-((event.getY()/(float)v.getHeight())*2-1);
+//            final float normalizedY=(((event.getY())/(float)v.getHeight())-1);
 
-            LogUtil.i("TouchTAG", "AirHockeyActivity.onTouch: event =("+event.getX()+", "+event.getY()+")");
-            LogUtil.i("TouchTAG", "AirHockeyActivity.onTouch: view size=("+v.getWidth()+", "+v.getHeight()+")");
-            LogUtil.i("TouchTAG", "AirHockeyActivity.onTouch: normalizedX="+normalizedX+", normalizedY="+normalizedY);
+            LogUtil.i("OnTouchTAG", "AirHockeyActivity.onTouch: event =("+event.getX()+", "+event.getY()+")");
+            LogUtil.i("OnTouchTAG", "AirHockeyActivity.onTouch: view size=("+v.getWidth()+", "+v.getHeight()+")");
+            LogUtil.i("OnTouchTAG", "AirHockeyActivity.onTouch: normalizedX="+normalizedX+", normalizedY="+normalizedY);
             if(event.getAction()==MotionEvent.ACTION_DOWN){
                 surfaceView.queueEvent(new Runnable() {
                     @Override

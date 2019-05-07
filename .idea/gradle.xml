@@ -12,6 +12,8 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/app3d" />
             <option value="$PROJECT_DIR$/appTextured" />
+            <option value="$PROJECT_DIR$/appTouch" />
+            <option value="$PROJECT_DIR$/appWithMallets" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
