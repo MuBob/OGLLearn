@@ -16,16 +16,22 @@ public class Table {
     private static final int POSITION_COMPONENT_COUNT = 2;
     private static final int TEXTURE_COORDINATES_COMPONENT_COUNT = 2;
     private static final int STRIDE = (POSITION_COMPONENT_COUNT + TEXTURE_COORDINATES_COMPONENT_COUNT) * Constants.BYTES_PER_FLOAT;
+    //桌子边界定义
+    public static final float center=0f;
+    public static final float leftBound=-0.5f;
+    public static final float rightBound=0.5f;
+    public static final float farBound=-0.8f;
+    public static final float nearBound=0.8f;
 
     private static final float[] VERTEX_DATA = {
             // Order of coordinates: X, Y, S, T
             //Triangle Fan
-            0f, 0f, 0.5f, 0.5f,
-            -0.5f, -0.8f, 0f, 0.9f,
-            0.5f, -0.8f, 1f, 0.9f,
-            0.5f, 0.8f, 1f, 0.1f,
-            -0.5f, 0.8f, 0f, 0.1f,
-            -0.5f, -0.8f, 0f, 0.9f
+            center, center, 0.5f, 0.5f,
+            leftBound, farBound, 0f, 0.9f,
+            rightBound, farBound, 1f, 0.9f,
+            rightBound, nearBound, 1f, 0.1f,
+            leftBound, nearBound, 0f, 0.1f,
+            leftBound, farBound, 0f, 0.9f
     };
     private final VertexArray vertexArray;
 

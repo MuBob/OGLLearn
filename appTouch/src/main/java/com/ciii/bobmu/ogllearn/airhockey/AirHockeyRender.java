@@ -40,8 +40,10 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
     private int texture;
     private boolean malletPressed = false;  //跟踪木槌触摸状态
     private Geometry.Point myMalletPosition;  //存储己方木槌当前位置
-    private float myPressDx, myPressDz;
     private Geometry.Point rivalMalletPosition;  //存储对方木槌当前位置
+    private Geometry.Point previousMyMalletPosition;  //存储己方木槌上次位置
+    private Geometry.Point puckPosition;  //存储冰球位置
+    private Geometry.Vector puckVector;  //存储冰球移动的方向向量
 
     public AirHockeyRender(Context context) {
         this.context = context;
@@ -58,6 +60,8 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
         texture = TextureHelper.loadTexture(context, R.mipmap.bg);
         myMalletPosition = new Geometry.Point(0f, mallet.height / 2f, 0.7f);
         rivalMalletPosition = new Geometry.Point(0f, mallet.height / 2f, -0.7f);
+        puckPosition=new Geometry.Point(0f, puck.height/2f, 0f);
+        puckVector=new Geometry.Vector(0f, 0f, 0f);
     }
 
     @Override
@@ -79,6 +83,8 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
     public void onDrawFrame(GL10 gl) {
         glClear(GL_COLOR_BUFFER_BIT);
 
+        puckPosition=puckPosition.translate(puckVector);
+
         positionTableInScene();
         textureProgram.useProgram();
         textureProgram.setUniforms(modelViewProjectionMatrix, texture);
@@ -99,7 +105,7 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
         //这里不需要再次定义数据，只需要原数据更新位置后绘制即可
         mallet.draw();
 
-        positionObjectInScene(0f, puck.height / 2f, 0f);
+        positionObjectInScene(puckPosition.x, puckPosition.y, puckPosition.z);
         colorProgram.setUniforms(modelViewProjectionMatrix, 0.8f, 0.8f, 1f);  //银色
         puck.bindData(colorProgram);
         puck.draw();
@@ -143,28 +149,21 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
         LogUtil.i("TouchPressTAG", "AirHockeyRender.handleTouchPress: malletBoundingSphere=" + malletBoundingSphere);
         malletPressed = Geometry.intersects(malletBoundingSphere, ray);
         LogUtil.i("TouchPressTAG", "AirHockeyRender.handleTouchPress: presssed?=" + malletPressed);
-        myPressDx = 0;
-        myPressDz = 0;
 //        Geometry.Plane plane = new Geometry.Plane(new Geometry.Point(0, 0, 0), new Geometry.Vector(0, 1, 0));
         Geometry.Plane plane = new Geometry.Plane(new Geometry.Point(myMalletPosition.x, myMalletPosition.y, myMalletPosition.z), new Geometry.Vector(0, 1, 0));
         Geometry.Point touchedPoint = Geometry.intersectionPoint(ray, plane);
         LogUtil.i("TouchPressTAG", "AirHockeyRender.handleTouchPress: touchPoint=" + touchedPoint);
-//        myPressDx=touchedPoint.x-myMalletPosition.x;
-//        myPressDz=touchedPoint.z-myMalletPosition.z;
-//        LogUtil.i("TouchDragTAG", "AirHockeyRender.handleTouchPress: dx="+myPressDx+", dz="+myPressDz);
-        /*
-//        Geometry.Plane testPlane = new Geometry.Plane(new Geometry.Point(0,0,0), new Geometry.Vector(0, 1, 0));
-        Geometry.Plane testPlane = new Geometry.Plane(new Geometry.Point(myMalletPosition.x, myMalletPosition.y, myMalletPosition.z), new Geometry.Vector(0, 1, 0));
-        LogUtil.i("TouchTestTAG", "AirHockeyRender.handleTouchPress: testPlane="+testPlane);
-        Geometry.Ray testRay=new Geometry.Ray(new Geometry.Point(0, 0.36117485f, 1.1877505f), new Geometry.Vector(0, -1.1614501f, -1.401576f));
-        LogUtil.i("TouchTestTAG", "AirHockeyRender.handleTouchPress: testRay="+testRay);
-        Geometry.Point testPoint = Geometry.intersectionPoint(testRay, testPlane);
-        LogUtil.i("TouchTestTAG", "AirHockeyRender.handleTouchPress: test intersectionPoint="+testPoint);*/
-
     }
 
     public void handleTouchDrag(float normalizedX, float normalizedY) {
         if (malletPressed) {
+            float distance=Geometry.vectorBetween(myMalletPosition, puckPosition).length();
+            if(distance<puck.radius+mallet.radius){
+                //木槌击中冰球
+                puckVector=Geometry.vectorBetween(previousMyMalletPosition, myMalletPosition);
+            }
+
+
             // 根据屏幕触碰点 和 视图投影矩阵 产生三维射线
             Geometry.Ray ray = convertNormalized2DPointToRay(normalizedX, normalizedY);
             LogUtil.i("TouchDragTAG", "AirHockeyRender.handleTouchDrag: ray=" + ray);
@@ -176,10 +175,18 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
             Geometry.Point touchedPoint = Geometry.intersectionPoint(ray, plane);
             LogUtil.i("TouchDragTAG", "AirHockeyRender.handleTouchDrag: touchPoint=" + touchedPoint);
 
+            previousMyMalletPosition=myMalletPosition;
             // 根据相交点 更新木槌位置
-            myMalletPosition = new Geometry.Point(touchedPoint.x + myPressDx, mallet.height / 2f, touchedPoint.z + myPressDz);
+            myMalletPosition = new Geometry.Point(
+                    clamp(touchedPoint.x, Table.leftBound+mallet.radius, Table.rightBound-mallet.radius),
+                    mallet.height / 2f,
+                    clamp(touchedPoint.z, Table.center+mallet.radius, Table.nearBound-mallet.radius));
             LogUtil.i("TouchDragTAG", "AirHockeyRender.handleTouchDrag: malletPoint=" + myMalletPosition);
         }
+    }
+
+    private float clamp(float value, float min, float max){
+        return Math.min(max, Math.max(value, min));
     }
 
     private Geometry.Ray convertNormalized2DPointToRay(float normalizedX, float normalizedY) {
