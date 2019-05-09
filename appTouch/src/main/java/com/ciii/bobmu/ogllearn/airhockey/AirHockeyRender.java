@@ -84,6 +84,25 @@ public class AirHockeyRender implements GLSurfaceView.Renderer {
         glClear(GL_COLOR_BUFFER_BIT);
 
         puckPosition=puckPosition.translate(puckVector);
+        if(puckPosition.x<Table.leftBound+puck.radius
+                ||puckPosition.x>Table.rightBound-puck.radius
+        ){
+            puckVector=new Geometry.Vector(-puckVector.x, puckVector.y, puckVector.z);
+            puckVector=puckVector.scale(0.95f);
+        }
+        if(puckPosition.z<Table.farBound+puck.radius
+                ||puckPosition.z>Table.nearBound-puck.radius
+        ){
+            puckVector=new Geometry.Vector(puckVector.x, puckVector.y, -puckVector.z);
+            puckVector=puckVector.scale(0.95f);
+        }
+        puckPosition=new Geometry.Point(
+                clamp(puckPosition.x, Table.leftBound+puck.radius, Table.rightBound-puck.radius),
+                puckPosition.y,
+                clamp(puckPosition.z, Table.farBound+puck.radius, Table.nearBound-puck.radius)
+        );
+        puckVector=puckVector.scale(0.99f);
+
 
         positionTableInScene();
         textureProgram.useProgram();
